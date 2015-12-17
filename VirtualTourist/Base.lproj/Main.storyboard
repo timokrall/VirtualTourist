@@ -28,7 +28,11 @@
                                 </constraints>
                                 <items>
                                     <navigationItem title="Virtual Tourist" id="xWP-Vf-b6z">
-                                        <barButtonItem key="rightBarButtonItem" title="Edit" id="b63-P6-wd0"/>
+                                        <barButtonItem key="rightBarButtonItem" title="Edit" id="b63-P6-wd0">
+                                            <connections>
+                                                <action selector="mapEditAction:" destination="BYZ-38-t0r" id="oe9-ee-QbS"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -45,6 +49,10 @@
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
+                    <connections>
+                        <outlet property="mapEdit" destination="b63-P6-wd0" id="qXG-aw-I6z"/>
+                        <outlet property="mapView" destination="erq-vv-3n2" id="7re-hZ-X4m"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -105,6 +113,9 @@
                                     <constraint firstAttribute="height" constant="30" id="ku8-Vs-sCX"/>
                                 </constraints>
                                 <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="newCollectionAction:" destination="YIF-TW-GCe" eventType="touchUpInside" id="G6r-CR-c4j"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -125,6 +136,11 @@
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
+                    <connections>
+                        <outlet property="collectionView" destination="eOq-UX-p4H" id="zG8-eN-Z3k"/>
+                        <outlet property="mapView" destination="dHi-ql-JMv" id="fqe-qU-YPU"/>
+                        <outlet property="newCollection" destination="CQ2-e7-SiZ" id="wII-ge-gkW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7ns-7G-gr9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

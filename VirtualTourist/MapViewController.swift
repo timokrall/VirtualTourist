@@ -7,19 +7,38 @@
 //
 
 import UIKit
+import Foundation
+import MapKit
+import CoreLocation
 
 class MapViewController: UIViewController {
 
+    // MARK: Outlets
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapEdit: UIBarButtonItem!
+    
+    // MARK: Variables
+    var geoCoder = CLGeocoder()
+    var location: CLLocation!
+    var region: MKCoordinateRegion!
+    var latitude: AnyObject?
+    var longitude: AnyObject?
+    var errorMsg: String = ""
+    
+    // MARK: Lifycycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-
+    
+    // MARK: Functions
+    
+    // MARK: Actions
+    @IBAction func mapEditAction(sender: AnyObject) {
+    }
 
 }
 
