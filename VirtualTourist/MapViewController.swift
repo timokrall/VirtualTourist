@@ -16,6 +16,7 @@ class MapViewController: UIViewController {
     // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var mapEdit: UIBarButtonItem!
+    @IBOutlet weak var bottomLabel: UILabel!
     
     // MARK: Variables
     var geoCoder = CLGeocoder()
