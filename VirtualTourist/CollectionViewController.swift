@@ -26,6 +26,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     // MARK: Lifecyle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,6 +46,5 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! CollectionViewControllerCell
         return cell
     }
-    
     
 }
