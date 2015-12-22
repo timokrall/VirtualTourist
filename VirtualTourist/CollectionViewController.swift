@@ -22,10 +22,12 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     @IBOutlet weak var emptyLabel: UILabel!
     
     // MARK: Variables
+    var droppedPin: Pin!
     
     // MARK: Lifecyle
     override func viewDidLoad() {
         super.viewDidLoad()
+
         
     }
 

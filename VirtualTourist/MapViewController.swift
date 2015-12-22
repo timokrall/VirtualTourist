@@ -6,6 +6,17 @@
 //  Copyright © 2015 Timo Krall. All rights reserved.
 //
 
+/**
+* Five steps to using Core Data to persist MasterDetail:
+*
+* 1. Add a convenience method that find the shared context
+* 2. Add fetchAllPins()
+* 3. Invoke fetchAllPins in viewDidLoad()
+* 4. Create a Pin object in insertNewObject()
+* 5. Save the context in insertNewObject()
+*
+*/
+
 import UIKit
 import Foundation
 import MapKit
@@ -24,9 +35,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
     
     // MARK: Variables
     var editButton: UIBarButtonItem?
-    let annotation = MKPointAnnotation()
+    var annotation = MKPointAnnotation()
+    var pins = [Pin]()
     
-    // sharedContext convenience property
+    // Step 1: Add a "sharedContext" convenience property
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance().managedObjectContext
     }
@@ -34,21 +46,18 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
     // MARK: Lifycycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Step 3: Initialize the pins array with the results of the fetchAllPins() method
+        pins = fetchAllPins()
+        
         // Hide bottomLabel before edit button is pressed
         bottomLabel.hidden = true
         
         // Variable required for recognizing long press and starting handeLongPress() after long press is recognized
         // Variable created after reading stackoverflow post http://stackoverflow.com/questions/3959994/how-to-add-a-push-pin-to-a-mkmapviewios-when-touching
-        var longPressRecogniser = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
-        longPressRecogniser.minimumPressDuration = 1.0
-        mapView.addGestureRecognizer(longPressRecogniser)
         
         // Variable required for recognizing tap and starting removeAnnotation() after tap is recognized
         // Variable created after reading stackoverflow post http://stackoverflow.com/questions/29720537/removing-pin-annotation-issue-in-mkmapview-swift
-        
-        var tap = UITapGestureRecognizer(target: self, action: "removeAnnotation:")
-        tap.numberOfTapsRequired = 1
-        self.mapView.addGestureRecognizer(tap)
         
         // Connect edit button to mapEditPressed function
         editButton = editButtonItem()
@@ -63,40 +72,70 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
     
     // MARK: Functions
     
-    // Function for dropping pin to map after long press
-    // Function created after reading stackoverflow post http://stackoverflow.com/questions/3959994/how-to-add-a-push-pin-to-a-mkmapviewios-when-touching
-    
-    func handleLongPress(gestureRecognizer : UILongPressGestureRecognizer){
+    // Step 2: Add a fetchAllPins() method
+    func fetchAllPins() -> [Pin] {
         
-        if editButtonItem().title == "Edit" {
+        let fetchRequest = NSFetchRequest()
+        let entity = NSEntityDescription.entityForName("Pin", inManagedObjectContext: sharedContext)
+        var error: NSError? = nil
         
-            let touchPoint = gestureRecognizer.locationInView(self.mapView)
-            let touchMapCoordinate = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
-
-            annotation.coordinate = touchMapCoordinate
-            
-            if gestureRecognizer.state != .Began { return }
-            mapView.addAnnotation(annotation)
-    
+        fetchRequest.entity = entity
+        
+        var results: [AnyObject]?
+        do {
+            results = try sharedContext.executeFetchRequest(fetchRequest)
+        } catch let error1 as NSError {
+            error = error1
+            results = nil
         }
         
+        if let error = error {
+            // TODO: display error message to user.
+            print("Error fetching events:\(error)")
+            return [Pin]()
+        }
+        
+        return results as! [Pin]
     }
+    
+    func insertNewObject(sender: AnyObject) {
+    
+        // Step 4: Create a Pin object (and append it to the pins array.)
+        
+        let newPin = Pin(context: sharedContext)
+        
+        pins.append(newPin)
+        
+        // Step 5: Save the context (and check for an error.)
+        
+        var error: NSError?
+        
+        do {
+            try sharedContext.save()
+        } catch let error1 as NSError {
+            error = error1
+        }
+        
+        if let error = error {
+        
+            print("Error saving context: \(error)")
+        
+        }
+        
+        // TODO: verify this is the correct equivalent to "tableView.reloadData()"
+        mapView.reloadInputViews()
+
+    
+    }
+
+    // Function for dropping pin to map after long press
+    // Function created after reading stackoverflow post http://stackoverflow.com/questions/3959994/how-to-add-a-push-pin-to-a-mkmapviewios-when-touching
+
     
     // Function for removing pin from map after tap
     // Function created after reading stackoverflow post http://stackoverflow.com/questions/29720537/removing-pin-annotation-issue-in-mkmapview-swift
     
-    func removeAnnotation(gestureRecognizer : UIGestureRecognizer){
-        
-        if editButtonItem().title == "Done" {
-            
-            if gestureRecognizer.state == UIGestureRecognizerState.Ended {
-                mapView.removeAnnotation(annotation)
-            }
-        }
-            
-    }
 
-    
     // Function for displaying the bottom label when edit button is pressed
     
     func mapEditPressed () {
