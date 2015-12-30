@@ -11,8 +11,8 @@ import CoreData
 
 private let SQLITE_FILE_NAME = "VirtualTourist.sqlite"
 
+// -> Udacity FavoriteActors example
 class CoreDataStackManager {
-    
     
     // MARK: - Shared Instance
     
@@ -115,3 +115,4 @@ class CoreDataStackManager {
         }
     }
 }
+
